@@ -5,7 +5,7 @@ import { Temperature } from './components';
 function App() {
   return (
     <div className="App">
-     App
+     TempTrek
      <Temperature/>
     </div>
   );
