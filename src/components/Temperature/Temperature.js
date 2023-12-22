@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Search } from "../Search";
-
 export const Temperature = () => {
   const apiKey = process.env.REACT_APP_API_KEY;
   const [location, setLocation] = useState("");
   const [lat,setLat] = useState(null);
   const [lon,setLon] = useState(null);
-
+  const[temp,setTemp] = useState(undefined);
+  const[city,setCity] = useState(null);
   const URL_WEATHER = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`
   const URL_LOCATION = `https://api.openweathermap.org/geo/1.0/direct?q=${location}&limit=5&appid=${apiKey}`;
 
@@ -17,6 +17,7 @@ export const Temperature = () => {
       const data = await response.json(); 
       setLon(data[0]?.lon)
       setLat(data[0]?.lat)
+      setCity(data[0]?.name)
     };
     fetchData();
   }, [URL_LOCATION, apiKey]);
@@ -24,26 +25,36 @@ export const Temperature = () => {
   function handleChange(event) {
     setLocation(event.target.value);
   }
-
-  function searchCity(city) {
-    console.log(city);
-  }
 // Handling weather
 useEffect(() => {
   const fetchWeather = async () => {
     if (lat !== null && lon !== null) {
       const weatherRes = await fetch(URL_WEATHER);
       const data = await weatherRes.json();
-      console.log(data);
+      console.log(data.main?.temp);
+      convertKelvin(data.main?.temp);
     }
   };
   fetchWeather();
 }, [URL_WEATHER, lat, lon]);
 
-  return (
-    <div>
-      <input onChange={handleChange} />
-      <button onClick={() => searchCity(location)}>Search</button>
-    </div>
-  );
+//Celsius converter
+function convertKelvin(K) {
+  const celsius = (K - 273.15).toFixed(0);
+  if (!isNaN(celsius)) {
+    setTemp(celsius);
+  }
+}
+
+return (
+  <div className="max-w-md mx-auto mt-8 p-4 bg-blue-500 text-white shadow-md rounded-md">
+    <input
+      className="w-full p-2 mb-4 border border-gray-300 rounded text-black"
+      placeholder="Enter location..."
+      onChange={handleChange}
+    />
+    {city && <h2 className="text-xl font-semibold">{city}</h2>}
+    {temp && <div className="text-4xl mt-2">{temp}&deg;C</div>}
+  </div>
+);
 };
