@@ -1,2 +1,4 @@
 export * from "./Search";
-export * from "./Temperature";
+export * from "./Main";
+export * from "./UI";
+export * from "./Common";
