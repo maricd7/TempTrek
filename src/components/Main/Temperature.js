@@ -72,6 +72,8 @@ export const Temperature = () => {
       setIcon('meteocons:overcast-fog-fill')
     }else if (weatherStatus ==='Snow'){
       setIcon('meteocons:snow-fill')
+    }else if(weatherStatus === 'Thunderstorm'){
+      setIcon('meteocons:thunderstorms-day-extreme-fill')
     }
 
     setStatus(true);
